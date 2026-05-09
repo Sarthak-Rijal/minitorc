@@ -1,10 +1,3 @@
-# py_library(
-#     name = "planner",
-#     srcs = ["planner.py"],
-#     deps = ["//perception:detector"],
-#     visibility = ["//visibility:public"],
-# )
-
 py_library(
     name = "validator",
     srcs = ["validator.py"],
