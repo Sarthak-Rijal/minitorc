@@ -1,0 +1,22 @@
+# Bazel output symlinks — created automatically in the workspace root on first build
+/bazel-*
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+
+# Claude Code internal
+.claude/

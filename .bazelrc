@@ -1,0 +1,14 @@
+# Build flags
+build --enable_platform_specific_config
+build --show_timestamps
+
+# Cache config — use local disk cache
+build --disk_cache=~/.cache/bazel-disk
+
+# Test output
+test --test_output=errors
+test --test_verbose_timeout_warnings
+
+# Release config
+build:release --compilation_mode=opt
+build:release --stamp
