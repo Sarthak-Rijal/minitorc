@@ -1,4 +1,5 @@
 """Perception module: detects objects in the environment."""
+# Testing staping artifacts
 
 from dataclasses import dataclass
 from typing import List
