@@ -12,3 +12,4 @@ test --test_verbose_timeout_warnings
 # Release config
 build:release --compilation_mode=opt
 build:release --stamp
+build:release --workspace_status_command=scripts/workspace_status.sh
