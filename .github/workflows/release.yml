@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Bazelisk
+        run: |
+          curl -fsSL https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 \
+            -o /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
+
+      - name: Build release artifacts
+        run: bazel build //... --config=release
+
+      - name: Package artifact
+        run: tar -czf release-${{ github.sha }}.tar.gz bazel-bin/
+
+      # Stubbing AWS resources
+
+      - name: Authenticate to AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-release
+          aws-region: us-east-1
+
+      - name: Upload artifact to S3
+        run: |
+          aws s3 cp release-${{ github.sha }}.tar.gz \
+            s3://${{ secrets.S3_BUCKET }}/releases/release-${{ github.sha }}.tar.gz
+
+      - name: Trigger Temporal pipeline
+        env:
+          TEMPORAL_HOST: ${{ secrets.TEMPORAL_HOST }}
+        run: |
+          pip install temporalio
+          python temporal/trigger.py --release-id ${{ github.sha }}
